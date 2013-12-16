@@ -168,7 +168,16 @@ class StatsGrid implements HtmlElementInterface {
 	 *
 	 */
 	public function toHtml() {
+	    list($table, $maxX, $max) = $this->getRawTableData();
+	    $this->printTable($table, $maxX, $maxY);
+    }
 		
+	/**
+	 * Get the raw table data
+	 *
+	 */
+	public function getRawTableData() {
+	    
 		$dataset = $this->data;
 		
 		$statsRows = new StatsColumn();
@@ -323,7 +332,9 @@ class StatsGrid implements HtmlElementInterface {
 			$i = 0;
 			$j = 0;
 			foreach ($this->values as $value) {
-				$table[$yCoord+$j][$xCoord+$i]['value'] = $value->getValue($dataRow);
+			    if(!isset($table[$yCoord+$j][$xCoord+$i]['value'])) {
+				    $table[$yCoord+$j][$xCoord+$i]['value'] = $value->getValue($dataRow);
+			    }
 				if ($this->valuesDisplayMode == self::VALUES_DISPLAY_HORIZONTAL) {
 					$i++;
 				} else {
@@ -403,8 +414,8 @@ class StatsGrid implements HtmlElementInterface {
 				$table[$j][$i]["class"] .= ($j%2)?" columnodd":" columneven";
 			}
 		} 
-		
-		$this->printTable($table, $maxX, $maxY);
+
+		return array($table, $maxX, $maxY);
 	}
 
 	
